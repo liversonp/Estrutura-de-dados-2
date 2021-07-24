@@ -12,9 +12,9 @@ Saída: Imprima os mesmos números ordenados de forma não decrescente. Os núme
 
 void InsertionSimples(int *v, int l, int r){
     int aux;
-    for(int i = l; i<r;++i){
-        for(int j = r-1;j>i;--j){
-            if(v[j] > v[j-i]){
+    for(int i = l+1; i<r;++i){
+        for(int j = i;j>l;--j){
+            if(v[j] < v[j-1]){
                 aux = v[j];
                 v[j] = v[j-1];
                 v[j-1] = aux;

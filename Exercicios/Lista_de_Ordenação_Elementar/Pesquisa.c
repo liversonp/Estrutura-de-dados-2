@@ -15,67 +15,82 @@ typedef struct Mapa{
     char comando[13];
 } Mapa;
 
-void ordena(Mapa *map, int l, int r){
+void Insertion(Mapa *v, int l, int r){
     Mapa aux;
     int j;
 
-    for(int i = r-1; i>l; --i){
-        if(map[i].num < map[i-1].num){
-            aux = map[i-1];
-            map[i-1] = map[i];
-            map[i] = aux;
+    for(int i = r; i>l; --i){
+        if(v[i].num < v[i-1].num){
+            aux = v[i-1];
+            v[i-1] = v[i];
+            v[i] = aux;
         }
     }
+
+    for(int i = l+2; i<=r;++i){
+        j = i;
+        aux = v[j];
+
+        while(aux.num < v[j-1].num){
+            v[j] = v[j-1];
+            j--;
+        }
+        v[j] = aux;
+    }
+    return;
+}
+
+int busca_binaria(Mapa *v, int l, int r, int num, int ant){
+    int pos = (l+r)/2;
+    int achei = -1;
+    int sla;
+
+    if(pos == ant){
+        return -1;
+    }
+
+    if(v[pos].num == num){
+        return pos;
+    }
+
+    else{
+        if(v[pos].num < num){
+            l = pos;
+        }
+        else{
+            r = pos;
+        }
+        ant = pos;
+        achei = busca_binaria(v, l, r, num, ant);
+    }
+    return achei;
 }
 
 int main(void){
-    int n, ver = 0, v, i, p, rep, l = 0, r;
+    int n, ver, v, i, l = 0, r;
     scanf("%d", &n);
     Mapa *map = (Mapa*)malloc(n*sizeof(Mapa));
 
     for(i=0; i<n;++i){
         scanf("%d", &map[i].num);
         scanf(" %s", map[i].comando);
-        ordena(map, 0, i);
     }
-    
-    Mapa aux = map[i-2];
-    map[i-2] = map[i-1];
-    map[i-1] = aux;
-    
-    r = n;
-    
+
+    Insertion(map, 0, i-1);
 
     while(scanf("%d", &v) != EOF){
         ver = 0;
         l = 0;
         r = n;
+        ver = busca_binaria(map, l, r, v, -1);
 
-        int *vis = (int*)calloc(n,sizeof(int));
-
-        while(ver != 1 && vis[l + (r - l)/2] == 0){
-            p = l + (r - l)/2;
-            
-            if(map[p].num == v){
-                printf("%s\n", map[p].comando);
-                ver = 1;
-            }
-
-            else{
-                vis[p] = 1;
-                if(map[p].num > v){
-                    r = p;
-                }
-
-                else{
-                    l = p;
-                }
-            }
-        }
-
-        if(ver == 0){
+        if(ver == -1){
             printf("undefined\n");
         }
+        else{
+            printf("%s\n",map[ver].comando);
+        }
     }
+    free(map);
     return 0;
 }

@@ -10,21 +10,22 @@ Saida: Imprima os mesmos números ordenados de forma não decrescente. Os númer
 #include <stdio.h>
 #include <stdlib.h>
 
-/*typedef int Item;
+#ifndef __ORDENACAOMACROS__
+#define __ORDENACAOMACROS__
+typedef int Item;
 #define less(A,B) ((A) < (B))
 #define lesseq(A,B) ((A) <= (B))
 #define exch(A,B) { Item t; t=A;A=B;B=t; }
-#define cmpexch(A,B) { if (less(B,A)) exch(A,B);}
-*/
+#define cmpexch(A,B) { if (less(B,A)) exch(A,B); }
+
+#endif
 
 void bubblesort(int *v, int l, int r){
     int aux;
     for(int i=l; i<r;++i){
         for(int j=l; j<r-1;++j){
-            if(v[j] > v[j+1]){
-                aux = v[j];
-                v[j] = v[j+1];
-                v[j+1] = aux;
+            if(less(v[j+1], v[j])){
+                exch(v[j+1], v[j]);
             }
         }
     }
